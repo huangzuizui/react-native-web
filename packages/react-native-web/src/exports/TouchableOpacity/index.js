@@ -117,7 +117,11 @@ const TouchableOpacity = createReactClass({
   },
 
   touchableHandleLongPress: function(e: Event) {
-    this.props.onLongPress && this.props.onLongPress(e);
+    const touchBank = e.touchHistory.touchBank[e.touchHistory.indexOfSingleActiveTouch];
+    const offset = Math.sqrt(Math.pow(touchBank.startPageX - touchBank.currentPageX, 2)
+      + Math.pow(touchBank.startPageY - touchBank.currentPageY, 2));
+    const velocity = (offset / (touchBank.currentTimeStamp - touchBank.startTimeStamp)) * 1000;
+    if (velocity < 100) this.props.onLongPress && this.props.onLongPress(e);
   },
 
   touchableGetPressRectOffset: function() {
